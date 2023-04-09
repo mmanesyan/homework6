@@ -13,53 +13,58 @@ function Song(title,artist){
     this.artist=artist
     this.isPlaying=false
   }
-function Playlist(){
- this.songs=[]
- let currentSongIdx=0
-}
-
-Playlist.prototype.add=function (...songs){
+  
+  Song.prototype.stop=function(){
+    this.isPlaying=false
+    console.log(`${this.title} stopped`)
+  }
+  
+  Song.prototype.play=function(){
+    this.isPlaying=true
+    console.log(`${this.title} started to play`)
+  }
+  
+  function Playlist(){
+    this.songs=[]
+    this.currentSongIdx=0
+  }
+  
+  Playlist.prototype.add=function (...songs){
     for(let i=0;i<songs.length;i++){
-        if (songs[i] instanceof Song) {
-            this.songs.push(songs[i]);
-        }
+      if (songs[i] instanceof Song) {
+        this.songs.push(songs[i]);
+      }
     }
-   }
-Playlist.prototype.play=function(...songs){
-       
-            let currentSong = this.songs[this.currentSongIdx]
-            if (currentSong) {
-            console.log(`${this.title}  started to play`)
-            currentSong.isPlaying = true
-            }
-   }
-Playlist.prototype.stop=function(...songs){
-    let currentSong = this.songs[this.currentSongIdx]
-    if(currentSong){
-    console.log(` ${currentSong.title} stopped `);
-    currentSong.isPlaying = false
-    } 
-}
-
-Playlist.prototype.next=function(...songs){
-    let currentSong = this.songs[this.currentSongIdx]
-    if(currentSong){
-    currentSong.isPlaying = false
-    } 
-    this.currentSongIndex = (this.currentSongIndex + 1) % this.songs.length;
-        this.play()
-}
-
-const playlist = new Playlist();
-const heyJude = new Song("Hey Jude", "The Beatles");
-const jaded = new Song("Jaded", "Aerosmith");
-playlist.add(heyJude);
-playlist.add(jaded);
-playlist.play(); // Hey Jude started to play
-playlist.next(); // Hey Jude stopped, Jaded started
-playlist.next(); // Jaded stopped, Hey Jude started
-playlist.stop(); // Hey Jude stopped
-playlist.play(); // Hey Jude started
+  }
+  
+  Playlist.prototype.stop=function(){
+    this.songs[this.currentSongIdx].stop();
+  }
+  
+  Playlist.prototype.play=function(){
+    this.songs[this.currentSongIdx].play();
+  }
+  
+  Playlist.prototype.next=function(){
+    this.stop();
+    this.currentSongIdx++;
+    if(this.currentSongIdx===this.songs.length){
+      this.currentSongIdx=0;
+    }
+    this.play();
+  }
+  
+  let playlist = new Playlist();
+  let heyJude = new Song("Hey Jude", "The Beatles");
+  let jaded = new Song("Jaded", "Aerosmith");
+  playlist.add(heyJude);
+  playlist.add(jaded);
+  playlist.play(); // Hey Jude started to play
+  playlist.next(); // Hey Jude stopped, Jaded started
+  playlist.next(); // Jaded stopped, Hey Jude started
+  playlist.stop(); // Hey Jude stopped
+  playlist.play(); // Hey Jude started
+  
 
 
   
